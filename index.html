@@ -785,32 +785,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     const mg = t3*3 + t2*2;
                     let value = '';
-                    
                     if (pillType.type === 3) {
-                        value = t3 % 1 === 0 ? t3 : t3.toFixed(1);
+                        // FIX: สำหรับโหมดเม็ดเต็มห้ามแบ่งครึ่ง และขนาดยาเป็น 0 ให้แสดงคำว่า 'หยุด'
+                        if (isFixedDose && t3 === 0) {
+                            value = '<span style="color: var(--main-pink); font-weight: 700;">หยุด</span>';
+                        } else {
+                            value = t3 % 1 === 0 ? t3 : t3.toFixed(1);
+                        }
                     } else if (pillType.type === 2) {
-                        value = t2 % 1 === 0 ? t2 : t2.toFixed(1);
+                        // FIX: สำหรับโหมดเม็ดเต็มห้ามแบ่งครึ่ง และขนาดยาเป็น 0 ให้แสดงคำว่า 'หยุด'
+                        if (isFixedDose && t2 === 0) {
+                            value = '<span style="color: var(--main-pink); font-weight: 700;">หยุด</span>';
+                        } else {
+                            value = t2 % 1 === 0 ? t2 : t2.toFixed(1);
+                        }
                     } else if (pillType.type === 'total') {
                         value = mg.toFixed(2);
                     }
-
-                    // *** แก้ไข: เปลี่ยนค่า '0' เป็น 'หยุด' สีแดงในแถวรวม mg ***
-                    if (mg === 0) {
-                         if (pillType.type === 'total') {
-                            // แถวรวม mg ให้แสดง 'หยุด' สีแดง
-                             value = `<span style="color: red; font-weight: bold;">หยุด</span>`;
-                         } else if (pillType.type === 3 || pillType.type === 2) {
-                            // แถว 3mg/2mg หาก total dose เป็น 0 ให้แสดงค่า 0 ในสีแดง
-                            // (เพื่อให้สอดคล้องกับวันหยุด)
-                            if (pillType.type === 3) {
-                                value = `<span style="color: red;">${t3 % 1 === 0 ? t3 : t3.toFixed(1)}</span>`;
-                            } else if (pillType.type === 2) {
-                                value = `<span style="color: red;">${t2 % 1 === 0 ? t2 : t2.toFixed(1)}</span>`;
-                            }
-                         }
-                    }
-                    // *** สิ้นสุดการแก้ไข ***
-                    
                     dataRow += `<td>${value}</td>`;
                 }
                 dataRow += `</tr>`;
